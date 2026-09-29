@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>생각 쑥쑥 토의·토론 교실</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #EEF2FF;
+      --secondary: #10B981;
+      --warning: #F59E0B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --border: #CBD5E1;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* 헤더 및 고정 보드 */
+    .topic-board {
+      background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+      border: 2px solid #C7D2FE;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.08);
+    }
+    .topic-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .situation-text {
+      font-size: 15px;
+      color: #475569;
+      margin: 4px 0 10px 0;
+      line-height: 1.5;
+    }
+    .topic-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1E1B4B;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* 카드 컨테이너 */
+    .step-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* 폼 요소 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+    input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.5;
+    }
+
+    /* 체크리스트 박스 */
+    .check-box {
+      background: #F8FAFC;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .check-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 20px;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* 피드백 말풍선 */
+    .tutor-box {
+      background: #FEF3C7;
+      border-left: 4px solid var(--warning);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+      display: none;
+      line-height: 1.5;
+    }
+    .tutor-box.success {
+      background: #DCFCE7;
+      border-left-color: var(--secondary);
+      color: #14532D;
+    }
+
+    /* 이전 단계 요약 리캡 */
+    .recap-box {
+      background: #F1F5F9;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* 버튼 스타일 */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:hover {
+      background: #4338CA;
+    }
+    .btn:active {
+      transform: scale(0.99);
+    }
+    .btn-secondary {
+      background: #E2E8F0;
+      color: #334155;
+      margin-top: 8px;
+    }
+    .btn-secondary:hover {
+      background: #CBD5E1;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 상단 공통 문제 상황 & 토의 주제 보드 -->
+  <div class="topic-board">
+    <span class="topic-badge">우리 반 토의 마당</span>
+    <div class="situation-text"><strong>📌 문제 상황:</strong> 학교의 복도와 운동장에서 주인을 알 수 없는 물건을 주웠습니다.</div>
+    <h1 class="topic-title">🎯 토의 주제: 이름이 쓰여 있지 않은 물건의 주인을 어떻게 찾아 주면 좋을까?</h1>
+  </div>
+
+  <!-- Step 1: 기본 정보 입력 -->
+  <div id="step-1" class="step-card">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <h2 class="step-title">나의 정보를 적어주세요</h2>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="grade">학년</label>
+        <input type="number" id="grade" placeholder="예: 4" min="1" max="6">
+      </div>
+      <div class="form-group">
+        <label for="classNum">반</label>
+        <input type="number" id="classNum" placeholder="예: 5" min="1" max="20">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="studentNum">번호</label>
+        <input type="number" id="studentNum" placeholder="예: 12" min="1" max="40">
+      </div>
+      <div class="form-group">
+        <label for="name">이름</label>
+        <input type="text" id="name" placeholder="이름 입력">
+      </div>
+    </div>
+    <button class="btn" onclick="goToStep2()">다음 단계로 가기 ➔</button>
+  </div>
+
+  <!-- Step 2: 의견 작성 및 1차 점검 -->
+  <div id="step-2" class="step-card hidden">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <h2 class="step-title">나만의 해결 의견을 써보아요</h2>
+    </div>
+
+    <div class="form-group">
+      <label for="opinionInput">주인을 찾아주기 위한 나의 멋진 의견은?</label>
+      <textarea id="opinionInput" placeholder="예: 방송실에 부탁해서 주운 장소와 물건 모양을 방송으로 알리면 좋겠습니다."></textarea>
+    </div>
+
+    <!-- 1차 자가점검 -->
+    <div class="check-box">
+      <div class="check-title">🔍 스스로 확인하기: 토의 주제에 딱 맞는 의견인가요?</div>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="checkTopic" value="yes"> 네, 알맞아요!</label>
+        <label class="radio-label"><input type="radio" name="checkTopic" value="no"> 조금 더 생각해볼래요</label>
+      </div>
+    </div>
+
+    <div id="tutor1" class="tutor-box"></div>
+
+    <button class="btn" onclick="validateStep2()">생각 확인받고 다음으로 ➔</button>
+    <button class="btn btn-secondary" onclick="backToStep(1)">이전으로</button>
+  </div>
+
+  <!-- Step 3: 뒷받침 까닭 작성 및 2차 심층 점검 -->
+  <div id="step-3" class="step-card hidden">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <h2 class="step-title">의견을 뒷받침하는 까닭을 적어요</h2>
+    </div>
+
+    <div class="recap-box">
+      <strong>내가 쓴 의견:</strong> <span id="recapOpinion" style="color: var(--primary); font-weight: 700;"></span>
+    </div>
+
+    <div class="form-group">
+      <label for="reasonInput">왜 이 방법이 좋다고 생각했나요? (구체적인 까닭)</label>
+      <textarea id="reasonInput" placeholder="예: 이름이 적혀있지 않아도 전교생이 방송을 들으면 자기가 잃어버린 물건인지 바로 확인할 수 있기 때문입니다."></textarea>
+    </div>
+
+    <!-- 3중 자가점검 -->
+    <div class="check-box">
+      <div class="check-title">📋 3단 생각 점검표</div>
+      <div style="margin-bottom: 10px;">
+        <span style="font-size:14px; font-weight:600;">1. 의견을 뒷받침하는 까닭이 타당한가요?</span>
+        <div class="radio-group" style="margin-top:4px;">
+          <label class="radio-label"><input type="radio" name="chk1" value="yes"> 네</label>
+          <label class="radio-label"><input type="radio" name="chk1" value="no"> 아니오</label>
+        </div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <span style="font-size:14px; font-weight:600;">2. 우리 모두가 실제로 실천할 수 있나요?</span>
+        <div class="radio-group" style="margin-top:4px;">
+          <label class="radio-label"><input type="radio" name="chk2" value="yes"> 네</label>
+          <label class="radio-label"><input type="radio" name="chk2" value="no"> 아니오</label>
+        </div>
+      </div>
+      <div>
+        <span style="font-size:14px; font-weight:600;">3. 이 방법의 단점이나 어려움도 생각해 보았나요?</span>
+        <div class="radio-group" style="margin-top:4px;">
+          <label class="radio-label"><input type="radio" name="chk3" value="yes"> 네</label>
+          <label class="radio-label"><input type="radio" name="chk3" value="no"> 아니오</label>
+        </div>
+      </div>
+    </div>
+
+    <div id="tutor2" class="tutor-box"></div>
+
+    <button id="submitBtn" class="btn" onclick="submitFinalData()">최종 제출하고 활동지 만들기 ✨</button>
+    <button class="btn btn-secondary" onclick="backToStep(2)">이전으로</button>
+  </div>
+
+  <!-- 완료 화면 -->
+  <div id="step-done" class="step-card hidden" style="text-align: center; padding: 40px 20px;">
+    <div style="font-size: 54px; margin-bottom: 10px;">🎉</div>
+    <h2 style="font-size: 22px; color: var(--primary); margin-bottom: 8px;">제출이 완료되었습니다!</h2>
+    <p style="color: var(--text-muted); line-height: 1.6; font-size: 15px;">
+      선생님 스프레드시트에 내 생각이 안전하게 전달되었습니다.<br>
+      이제 모둠 친구들과 함께 서로의 생각을 나누어 봅시다!
+    </p>
+    <button class="btn btn-secondary" onclick="location.reload()" style="max-width: 200px; margin: 20px auto 0;">새로 작성하기</button>
+  </div>
+</div>
+
+<script>
+  // ⚠️ 여기에 구글 앱스 스크립트 웹앱 배포 URL을 입력하세요.
+  const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwbv5734U2DIOqpHneZKy3sTnKj5G2wfy8lXprZdW6E-s4ziWO2DgdafcdkkkoiLdgh7w/exec";
+
+  let formData = {
+    grade: "", classNum: "", studentNum: "", name: "",
+    opinion: "", reason: "",
+    checkTopic: "yes", checkReason: "yes", checkFeasible: "yes", checkCounter: "yes"
+  };
+
+  function backToStep(step) {
+    document.querySelectorAll('.step-card').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`step-${step}`).classList.remove('hidden');
+  }
+
+  function goToStep2() {
+    const grade = document.getElementById("grade").value.trim();
+    const classNum = document.getElementById("classNum").value.trim();
+    const studentNum = document.getElementById("studentNum").value.trim();
+    const name = document.getElementById("name").value.trim();
+
+    if (!grade || !classNum || !studentNum || !name) {
+      alert("학년, 반, 번호, 이름을 모두 빠짐없이 입력해 주세요!");
+      return;
+    }
+
+    formData.grade = grade;
+    formData.classNum = classNum;
+    formData.studentNum = studentNum;
+    formData.name = name;
+
+    document.getElementById("step-1").classList.add("hidden");
+    document.getElementById("step-2").classList.remove("hidden");
+  }
+
+  function validateStep2() {
+    const opinion = document.getElementById("opinionInput").value.trim();
+    const checkTopic = document.querySelector('input[name="checkTopic"]:checked');
+    const tutor = document.getElementById("tutor1");
+
+    tutor.style.display = "none";
+    tutor.className = "tutor-box";
+
+    if (!opinion) {
+      alert("주인을 찾아줄 수 있는 멋진 의견을 한 문장 이상 적어주세요!");
+      return;
+    }
+
+    if (!checkTopic) {
+      alert("스스로 확인하기 체크리스트(네/조금 더 생각해볼래요)를 선택해 주세요!");
+      return;
+    }
+
+    if (checkTopic.value === "no") {
+      tutor.style.display = "block";
+      tutor.innerHTML = "💡 <strong>AI 튜터의 조언:</strong> '이름이 없는 물건의 주인을 어떻게 찾을지'에 집중해 보세요. 게시판, 방송, 학급 전달 등 구체적인 방법을 상상해 보면 더 멋진 생각이 떠오를 거예요!";
+      return;
+    }
+
+    // 의견 길이 및 키워드 기반 초등 적합성 검증
+    if (opinion.length < 10) {
+      tutor.style.display = "block";
+      tutor.innerHTML = "💡 <strong>한 걸음 더!</strong> 생각이 조금 짧아요. '누가, 어디서, 어떻게 주인을 찾을지' 한두 마디만 더 덧붙여 볼까요?";
+      return;
+    }
+
+    formData.opinion = opinion;
+    document.getElementById("recapOpinion").innerText = opinion;
+    document.getElementById("step-2").classList.add("hidden");
+    document.getElementById("step-3").classList.remove("hidden");
+  }
+
+  function submitFinalData() {
+    const reason = document.getElementById("reasonInput").value.trim();
+    const chk1 = document.querySelector('input[name="chk1"]:checked');
+    const chk2 = document.querySelector('input[name="chk2"]:checked');
+    const chk3 = document.querySelector('input[name="chk3"]:checked');
+    const tutor = document.getElementById("tutor2");
+    const submitBtn = document.getElementById("submitBtn");
+
+    tutor.style.display = "none";
+    tutor.className = "tutor-box";
+
+    if (!reason) {
+      alert("의견을 뒷받침하는 구체적인 까닭을 입력해 주세요!");
+      return;
+    }
+
+    if (!chk1 || !chk2 || !chk3) {
+      alert("3가지 자가 점검표 항목을 모두 체크해 주세요!");
+      return;
+    }
+
+    if (chk1.value === "no" || chk2.value === "no" || chk3.value === "no") {
+      tutor.style.display = "block";
+      tutor.innerHTML = "🔎 <strong>생각 다듬기:</strong> '아니오'로 체크된 항목이 있어요. 우리 친구들이 학교에서 직접 실행할 수 있는지, 예상되는 어려운 점은 없는지 까닭에 조금만 더 보완해 주세요!";
+      return;
+    }
+
+    if (reason.length < 15) {
+      tutor.style.display = "block";
+      tutor.innerHTML = "💡 <strong>까닭 보완하기:</strong> 왜 그 방법이 효과적인지 친구들이 납득할 수 있도록 이유를 조금만 더 풍성하게 설명해 주세요!";
+      return;
+    }
+
+    formData.reason = reason;
+    formData.checkTopic = "적합";
+    formData.checkReason = "적합";
+    formData.checkFeasible = "가능";
+    formData.checkCounter = "고려완료";
+    formData.timestamp = new Date().toLocaleString("ko-KR");
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "선생님 시트로 전송하는 중...";
+
+    // 구글 앱스 스크립트로 비동기 전송
+    fetch(GAS_WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    })
+    .then(() => {
+      document.getElementById("step-3").classList.add("hidden");
+      document.getElementById("step-done").classList.remove("hidden");
+    })
+    .catch((err) => {
+      alert("전송 중 문제가 발생했습니다: " + err);
+      submitBtn.disabled = false;
+      submitBtn.innerText = "다시 제출하기";
+    });
+  }
+</script>
+
+</body>
+</html>
